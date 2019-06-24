@@ -1,0 +1,1031 @@
+---------------------------------------------------------------------------------------------------------------------
+-----------------------------------This file created by Mohammad Mahdi Khalatbari-----------------------------------
+---------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------101.1------------------------------------------------------
+Determine and configure hardware settings
+
+ls /dev									--------------تمام دیوایس های سیستم در اینجا قابل مشاهده هستند
+ls /sys
+ls /proc
+cat /proc/cpuinfo						--------------اطلاعات مربوط به پردازنده سیستم
+cat /proc/meminfo						-------------- اطلاعات مربوط به رم سیستم
+/proc/sys/fs							--------------تنظیمات هسته لینوکس در اینجا قرار دارد
+cd /proc/sys/net						--------------تمام فایل ها و تنظیمات مربوط به شبکه اینجا قرار دارد
+ls /dev/sda*
+lsmod		 	     	  	            --------------لیست ماژول هایی که کرنل لود کرده است
+rmmod	<module name>					--------------پاک کردن ماژول
+modprobe	<module name>				--------------اضافه کردن ماژول
+lsusb									--------------تمام دیوایس هایی که از طریق یو اس بی وصل هستند
+lspci									--------------تمام دستگاه هایی که از طریق بی سی ای وصل هستند
+lshw -short								--------------تمام اطلاعات سخت افزاری سیستم را به صورت کامل نشان میدهد
+
+----------------------------------------------------------101.2------------------------------------------------------
+Boot the system
+
+/boot/grub/grub.cfg
+pstree									--------------نمایش ردختی تمامی پروسس ها
+/var/log/dmesg							--------------تمامی لاگ های خود کرنل
+/var/log/messages						--------------برای دیدن دقیق تر لاگ های سیستم
+/var/log/syslog							--------------همانند دستور بالا
+var/log/boot.log						--------------برای دیدن لاگ ها تا پایان بوت
+
+----------------------------------------------------------101.3------------------------------------------------------
+Change runlevels and shutdown or reboot system
+
+runlevel								--------------برای مشاهده سطح اجرایی حال حاضر
+telinit 5								-------------- برای تغییر سطح اجرایی
+ls /etc/rc2.d/							--------------فایل هایی که سرویس های هر سطح اجرایی را نمایش میدهند
+shutdown -r 60 Reloading updated kernel
+shutdown -c								--------------دستور خاموش شدن را کنسل می کند
+initctl list							--------------وضعیت هر کدام از ایونت ها را نمایش میدهد و فقط مخصوص دبیان است
+systemctl								--------------وضعیت هر کدام از بونیت ها را نمایش میدهد که مخصوص ردهت می باشد
+
+----------------------------------------------------------102.1------------------------------------------------------
+Design hard disk layout
+
+fdisk /dev/sda							--------------برای مدیریت دیسک های MBR
+p										--------------نمایش پارتیشن ها
+q										--------------خروج
+parted /dev/sda p						--------------برای مدیریت دیسک های GPT
+
+----------------------------------------------------------102.2------------------------------------------------------
+Install a boot manager
+
+/etc/lilo.conf							--------------فایل تنظیمات lilo
+/usr/sbin/liloconfig					--------------برای ساخت فایل lilo.conf
+lilo -v									--------------نصب lilo
+/boot/grub/grub.conf					--------------کانفیگ فایل grub
+grub-install /dev/fd0					--------------نصب grub
+/boot/grub/grub.cfg						--------------فایل کانفیگ grub2
+grub-install /dev/sda					--------------نصب grub2
+
+----------------------------------------------------------102.3------------------------------------------------------
+Manage shared libraries
+
+ls /lib
+ls /lib64
+ls /usr/lib								--------------مشاهده لیب های سیستم
+ldd <program address>					-------------- مشاهده لیب های مورد استفاده یک برنامه
+locate <file name>						--------------برای گرفتن ادرس یک فایل در لینوکس
+cat /etc/ld.so.conf						--------------محل تمامی فایل های کانفیگ در اینجا قرار دارد
+ldconfig								--------------مسیر همه لیب ها را در فایل ld.so.catch ذخیره میکند.
+ldconfig -p								--------------مشاهده تمامی لیب هاییی که در دستور بالا ذخیره شده اند تمام لیب های لود شده سیستم عامل
+ls.so.catch								--------------حاوی مسیر همه لیب ها
+export LD_LIBRARY_PATH=/usr/lib/myoldlibs			--------------در صورت اضافه کردن لیب به لینوکس آن را با این دستور به سیستم میشناسانیم
+
+----------------------------------------------------------102.4------------------------------------------------------
+Use Debian package management
+
+bzr is an app name
+which bzr								--------------برنامه کجا قرار دارد
+whereis bzr								--------------آدرس برنامه کجاست
+apt-get install -s bzr					--------------نصب به صورت simulate
+apt-get install --download-only bzr 	--------------فقط دانلود کند و نصب نکند
+cat /etc/apt/sources.list				--------------آدرس تمامی repository
+apt-get remove bzr						--------------پاک کردن فقط برنامه
+apt-get autoremove bzr					--------------پاک کردن یک برنامه به همراه فایل های وابسته
+apt-get autoremove						--------------این دستور به صورت خودکار برنامه های اضافی که وابسته بوده اند را تشخیص داده و حذف میکند
+apt-cache search "tiny window"			--------------برای جستجو
+aptitude search grub2					--------------برای جستجو
+apt-get update							--------------برای اپدیت کردن repositories
+apt-get upgrade							--------------برای آپگرید کردن برنامه ها
+apt-get dist-upgrade					--------------برای اپگرید گل سیستم عامل به نسحخ چدید
+
+dpkg reconfigure tzdata					--------------تنظیمات دوباره یک برنامه
+dkpg contents bzr.deb					--------------محتوی یک فایل دبیان
+dpkg -s bzr.deb							--------------وصعیت بسته ها را نمایش می دهد
+dpkg -P bzr.deb							--------------آثار یک برنامه را کاملا حذف می کند.
+dpkg -L bzr.deb							--------------تمام برنامه ها و لیب هایی که نصب کرده است را می گوید
+dpkg -S /usr/share/jcal					--------------چه برنامه ای این را نصب کرده است
+dpkg -i bzr.deb							--------------نصب بک فایل deb به صورت مستقل
+aptitute
+
+----------------------------------------------------------102.5------------------------------------------------------
+Use RPM and YUM package management
+
+/etc/yum.repo.d							--------------لیست تمامی repository
+/etc/yum.conf							--------------فایل کانفیگ yum
+
+rpm -i bzr.rpm							--------------نصب یک بسته از فایل rpm-بدون نصب فایل های وابسته
+rpm -U bzr.rpm							--------------آپگرید یا نصب یک پکیچ
+rpm -F bzr.rpm							--------------اگر فایل نصب شده ورژن پایین تر این فایل بود آپگرید میکند در غیر اینصورت کاری نمی کند
+rpm -e bzr								--------------پاک کردن برنامه بدون حذف فایل های وابسته
+
+yum install bzr							--------------نصب یک بسته از طریق repository - به همراه نصب فایل های وابسته برای نصب
+yum autoremove bzr						--------------پاک کردن به همراه حذف فایل های وابسته
+yum upgrade 'cal*'						--------------آپگرید یک برنامه خاص یا کل برنامه های سیستم
+yum reinstall bzr
+yun deplist jcal						--------------کل فایل های وابسته این برنامه را نمایش میدهد
+yumdownloader --resolve bzr				--------------فقط دانلود میکنم به همراه دانلود فایل های وابسته
+
+Querying info:
+yum list bzr				
+rpm -q bzr
+yum info bzr							--------------هر سه دستور بالا برای گرفتن اطلاعات یک پکیج می باشد
+yum search hack							--------------تمام پکیج هایی که شامل هک می باشد را نمایش می دهد
+rpm -qa 								--------------تمام پکیج های نصب شده را نمایش میدهد
+rpm -ql bzr								--------------لیست تمام پکیچ هایی که این بسته نصب کرده است را نمایش می دهد
+rpm -qR bzr								--------------پکیج های مورد نیاز برای نصب این برنامه
+rpm -qF /usr/share/test.mo  			--------------برای دیدن اینکه یک فایل را چه برنامه ای نصب کرده است
+
+integration:
+rpm -vK bzr.rpm							--------------آیا این همان بسته است که نصب شده است
+rpm -V bzr								--------------آیا بسته های نصب شده تطابق دارند؟
+
+----------------------------------------------------------103.1------------------------------------------------------
+Work on the command line
+
+/etc/profile 							--------------محل قرار گیری فایل های کانفیگ shell
+
+echo Hello lpic
+echo line 1;echo line 2					--------------اول دستور سمت چپ و بعد دستور سمت راست را اجرا می کند.
+echo line 1 && echo line 2				--------------اگر دستور سمت چپ درست انجام شد بعد دستور سمت راست را اجرا کن
+echo line 1 || echo line 2				--------------اگر دستور سمت راست اجرا شد دستتور سمت چپ را اجرا نکن
+
+bash									--------------در همان بش یک بش جدید باز میکند
+exec ls									--------------بعد از اجرا دستور بش را می بندد
+echo -e "hi\nhosareyou"					--------------ین سئیچ برای زمانی است که میخواهیم کاراکتر های خاص را بش بفهمد
+
+Environment variables
+echo $USER					
+echo $UID					
+echo $HOME								--------------ادرس دایرکتوری HOMEرانشان میدهد
+echo $SHELL								--------------آدرس شل را میدهد
+echo $PWD								--------------دایرکتوری فعلی را نمایش می دهد
+echo $$									--------------current proc Id
+echo $PPID					-			--------------parent proc Id
+echo $?									--------------اگر مقدار آن ضفر بود یعنی از دستور قبلی درست خارج شده است
+MYMOOD=happy
+export MYMOOD							--------------یعنی از اینجا به بعد هر برنامه ای که در بش ران شود به این متغیر دسترسی دارد
+echo $MYMOOD
+	
+env										--------------نمایش تمام متغیر های محیطی
+set										--------------نمایش تمام متغیر های محیطی
+CHERT=PERT
+unset CHERT								--------------متغیر محیطی را حذف می کند
+uname -a								--------------تمام اطلاعات در مورد سیستم عامل مورد نظر را به ما میدهد
+
+HISTORY:
+history									--------------تاریخچه دستورات اجراشده را میدهد
+history 20
+!!										--------------اخرین دستور اجرا شده را مجددا اجرا میکند
+!echo									--------------اخرین دستوری که در آن اکو هست را مجددا اجرا میکند
+ctrl+r									--------------ستورات قبلی را نمایش میدهد و قابلیت جستجو دارد	
+
+echo $PATH								--------------مشاهده نمامی پت ها
+PATH=$PATH:/usr/temp					--------------آدرس جدید را به پت های قبلی اضافه میکند
+/etc/profile 							--------------برای اضافه کردن یک پت به سیستم باید این فایل را تغییر دهیم
+man ping								--------------مشاهده manualهر دستور 
+
+which ping								--------------کجاست
+whereis ping							--------------کجاست
+type ping								--------------چیست
+
+----------------------------------------------------------103.2------------------------------------------------------
+Process text streams using filters
+
+ls -1 | sort (-r)						--------------هر خروجی در یک خط  با منفی یک مشخص می گردد
+ls -ltrh > directory_data				--------------direction
+
+cat mydata directory_data				--------------در ابتدا فایل سمت چپ را نمایش میدهد و در ادامه فایل سمت راست
+cat mydata - directory_data				--------------این فایل ابتدا سمت چپ را نمایش میدهد و بعد منتظر ورودی از کاربر می ماند و بعد فایل سمت را ست را نمایش میدهد
+ls |cat what_i_have.txt - > sortedlist.txt 
+----------cat content and ls content, write on sortedlist.txt 
+
+od - dump files in octal and other formats:
+od -Ad									--------------decimal
+od -Ao									--------------octal
+od -Ax									--------------hex
+od -Ad -ta								--------------only name character
+od -Ad -c								--------------character
+
+split -l 2 mydata						--------------سه خط سه خط جدا کرده و در فایل های جدیدی ذخیره میکند
+split -b 40 mydata						--------------چهل بایتی جدا میکند
+
+wc * mydata								--------------کاراکتر-کلمه-خط
+wc -l mydata							--------------نمایش تعداد لاین ها
+
+head -n 6 mydata						--------------شش خط بالای فایل را نمایش میدهد
+tail -n 6 mydata						--------------شش خط آخر را نمایش میدهد
+tail -f /var/log/syslog					--------------فایل لاگ را باز نگه داشته و به صورت انلاین تغییرات را نمایش میدهد
+
+expand mydata | od -tc					--------------تمام تب هارا با اسپیس عوض میکند
+cat mydata | tr '1' '2'					--------------همه یک ها را با دو عوض میکند
+pr mydata								--------------print
+nl mydata								--------------number line
+fmt -rw80 mydata						--------------فرمت فایل ما را تغییر میدهد
+
+sort mydata								--------------sort (-n for numeric)
+sort mydata | uniq -c					--------------تعداد تکرار را نمایش میدهد
+sort mydata | uniq -u					--------------تکراری ها را حذف کرده و بقیه را نمایش میدهد
+sort mydata | uniq -d					--------------فقط تکراری ها را نمایش میدهد
+	
+cut -f1 mydata							--------------قسمت عمودی از فایل را نمایش میدهد
+paste mydata uses						--------------خط اول فایل دوم را پشت خط اول فایل اول میگذارد و بقیه هم به همین تریتیب
+
+sort howcool > howcool.sorted
+sort uses > uses.sorted
+join howcool.sorted uses.sorted 		-------------- برای این دستور ابتدا باید هر دو لیست را مرتب کنیم و بعد این دستور مقادیر مشترک را به ما نمایش میدهد
+
+sed 's/ubuntu/debian/g' uses			--------------مقادیر اوبونتو را با دبیان عوض می کند	
+
+----------------------------------------------------------103.3------------------------------------------------------
+Perform basic file management
+	
+ls -ltrh								--------------l(list) , t(time sorting), r(reverse), h(MB)
+	
+cp sources destination					--------------گپی چند فایل در یک مقصد
+cp -f sources destination				--------------فایل را سریعا پاک میکند
+cp -i sources destination				--------------قبل از انجام فرآیند سوال میپرسد
+cp -b sources destination				--------------از فایل اصلی بکاپ گرفته و بعد آنرا کپی می کند
+cp -p sources destination				--------------تمامی تنظیمات همچون دسترسی ها را نیز گپی می کند
+cp -r mydir newCopy						--------------خودش و همه فرزندانش را کپی میکند
+
+mv source destination
+for rename:
+mv dir1 dir2							--------------move di1 to dir2 and delete dir1 (this is rename)
+rm dir1
+
+directories:
+mkdir dirA dirB
+mkdir -p newDir/insideNew/lastDir		--------------parentرا هم میسازد
+rmdir dirA dirB							--------------remove
+tree
+
+remove and wild cards:
+rm newfile
+rm -r newDirectory
+rm * 									--------------delete all files
+ls A*B 									--------------all files starting with A ending with B
+cp ???.* /tmp 							--------------Copy all files with 3 characters, then a dot then whatever (even nothing)to /tmp
+rmdir [a-z]* 							--------------remove all directories which start with a letter
+
+touch:
+touch -t 200908121510.59 f3				--------------زمان فایل را بصورت کامل میدهیم و آن را تغییر میدهد
+touch -d 11am f4						
+touch -d "last fortnight" f5			--------------به چهار ر روز قبل تعییر میدهد
+touch -d "yesterday 6am" f6
+touch -d "2 days ago 12:00" f7
+touch -d "tomorrow 02:00" f8
+touch -d "5 Nov" f9
+touch -r f1 f1a							--------------تاریخ فایل سمت راست را به تاریخ فایل سمت چپ تغییر میدهد
+
+Finding:
+find . -iname "[a-j]*"				
+find . -name "*my*"
+find . -type f -iname "*my*"			--------------file
+find . -type d -iname "*my*"			--------------directory
+find . -type l -iname "*my*"			--------------symbilic link
+find /var -iname '*tmp* -size (+or-)1M 
+-------------بر اساس ساعت
+find . -atime -6 -exec rm '{}' \;		--------------- اخرین باری که به فایل دسترسی راشتیم
+find . -ctime +6 -print \;				--------------آخرین باری که فایل را change کردیم
+find . -mtime  6 -ls \;					--------------آخرین باری که محتوی را عوض کردیم
+--------------بر اساس دقیقه
+find . -mmin 20 -exec rm '{}' \;
+
+file /bin/bash							--------------نمایش نوع فایل
+
+Compressing:
+gzip The.Equalizer.srt					--------------خود فایل ریپ میشود و فایل اصلی حذف می شود
+gunzip The.Equalizer.srt
+bunzip2 The.Equalizer.srt
+
+Archiving:
+tar -cf myarchive.tar.gz /usr/share		--------------create file named myarchive.tar
+tar -xf myarchive.tar.gz 				--------------extract a file called myarchive.tar
+tar -z myarchive.tar.gz					--------------compress the archive with gzip after creating it
+tar -b cmyarchive.tar.gz				--------------compress the archive with bzip2 after creating it
+tar -v myarchive.tar.gz					--------------verbose! print a lot of data about what you are doing
+tar -r myarchive.tar.gz					--------------appeng new files to the currentyp available archive
+tar -rf myarchive.tar.gz jadid			--------------فایل جدید را به ارشیو اضافه می کند
+
+dd if=/dev/zero of=1g.bin bs=1G count=1	--------------یک فایل با حجم مشخص میسازد
+
+----------------------------------------------------------103.4------------------------------------------------------
+Use streams, pipes and redirects
+
+ls j* m* > output 2> errors				--------------خروجی استاندارد را در فایل خروجی ریخته و خروجی های دارای خطا را در فایل خطا میریزد
+ls j* m* >> output						--------------بدون overwrite
+ls j* &> 								--------------stderr, stdout together
+ls j* m* 1> output 2> &1				--------------بریز در همان جایی که خروجی استاندارد را رختی . این کار از تکرار اسم فایل خروجی جلوگیری میکند
+tr ' ' ',' < users						--------------فایل یوزر ها به عنوان فایل ورودی دستور می باشند
+
+here-documents:
+tr ' ' '.' << END						--------------از کاربرد ورودی می گرید تا زمانی که کاربر کلمه پایان را تایپ کند و بعد دستور را اجرا میکند
+
+Pipes:
+cut -f1 -d' ' what_i_have.txt | sort | uniq -c | sort -nr
+پایپ تمام خروجی های دستور اول را به ورودی دستور دوم می دهد
+
+xargs:
+cat what_i_have.txt | xargs -I DATA echo I have DATA and I love it
+این دستور ورودی میگیرد را جلو دستوری که جلو آن قرار دارد می گذارد
+در مثال بالا تمامی خروجی های قسمت اول را جلو xargs میگذارد
+هر جا دیتا بود جای آن خروجی دستور اول را می گذارد
+
+tee:
+ls -1 | tee allfiles myfiles			--------------لیست را در فایل میریزد و هم زمان نمایش هم میدهد
+
+----------------------------------------------------------103.5------------------------------------------------------
+Create, monitor and kill processes
+
+xeyes &									--------------send xeyes to background
+Ctrl+z									--------------freeze and stop a proc and sed it to backgroung
+jobs									--------------نمایش تمام دستورات در این ترمینال
+jobs -l									--------------jobs with pid
+bg %<proc number in jobs>				--------------برای ارسال یک دستور به بک گراند. این دستور یک پراسس را از حالت فریز نیز در می اورد
+fg %<proc number in jobs>				--------------برای ارسال یک دستور از بک گراند به فورگراند
+nohub sleep 1000 &						--------------دستور اسلیپ در کل سیستم اجرا شده و و با بسته شدن ترمینال این دستور اجرا می گردد
+
+kill:
+kill %<proc number in jobs>
+kill -9 <pid>							--------------در حالت عادی -۱۵میدهیم و در حالت بستن سریع نه را میدهیم
+killall sleep							--------------تمام دستوراتی که در آن اسلیپ هست را می بندد
+
+Processes:
+ps										--------------تمامی پراسس های این ترمینال را نمایش میدهد
+ps -aux									--------------تمامی پراسس های سیستم را میدهد
+ps -ef									--------------همانند دستور قبلی می باشد با کمی تفاوت
+ps -lf									--------------همه پراسس های این ترمینال را با کمی جزپیات نمایش میدهد
+pstree
+
+top and top switches :
+h 										--------------help
+q 										--------------quit
+M 										--------------sort based on memory usage"
+c 										--------------show full commands
+k 										--------------kill after asking pid and signal
+
+free :
+free -m									--------------وضعیت رم را میدهد
+free -g
+uptime
+
+----------------------------------------------------------103.6------------------------------------------------------
+Modify process execution priorities
+
+top										--------------برای دیدن اولیوت پراسس های سیستم
+nice sleep 200 &						--------------NI=0 TO NI=10
+nice -n -20 sleep 200 &					--------------تعیین میزان اولویت
+ps -lf 									--------------با این دستور مقدار اولویت هر دستور را در همان ترمینال میبینم
+renice -n -10 <procId>					--------------تغییر میزان اولویت
+
+----------------------------------------------------------103.7------------------------------------------------------
+Search text files using regular expressions
+
+grep p friends							--------------جستجو هر چیزی که در آن pدارد
+grep p *								--------------هر فایلی که در همین دایرکتوری جاری دارای p باشد
+egrep "a+" friends.txt					--------------حتما یکی داشته باشد
+egrep "a*" friends.txt					--------------میتواند صفر یا بیشتر داشته باشد
+egrep "a?" friends.txt					--------------یا یکی یا هیچی
+egrep "^a" friends.txt					--------------با این کاراکتر شروع شود
+egrep "a$" friends.txt					--------------با این کاراکتر تمام شود
+egrep "a{2,4}" friends.txt				--------------حداقل دوتا و حداکثر چهارتا
+egrep "^(a|b)" friends.txt				--------------با آ یا بی شروع گردد
+egrep -c a friends.txt					--------------تعداد را میدهد
+egrep -v a friends.txt					--------------آن هایی که این کاراکتر را ندارند را نمایش میدهد
+egrep -n a friends.txt					--------------شماره خط آن هایی که این کاراکتر را دارند را نمایش میدهد
+egrep -l a *							--------------لیست فایل هایی که در این دایرکتوری این کاراکتر را دارند را نمایش میدهد
+egrep -i a friends.txt					--------------نسبت به حروف بزرک و کوچک بی تاثیر میکند
+fgrep "d$" friends.txt					--------------دقیقا همان عبارتی که جلو آن میگذاریم را جستجو میکند و عبارت های خاص را بی تاثیر میکند
+[:alnume]								--------------تمام حروف بزرگ و کوچک و اعداد
+[:blank:]								--------------space, tap
+[:digite:]								--------------[0-9]
+
+Regular expression metacharacters:
+.										--------------Matches any single character.
+?										--------------The preceding item is optional and will be matched, at most, once.
+*										--------------The preceding item will be matched zero or more times.
++										--------------The preceding item will be matched one or more times.
+{N}										--------------The preceding item is matched exactly N times.
+{N,}									--------------The preceding item is matched N or more times.
+{N,M}									--------------The preceding item is matched at least N times, but not more than M times.
+-										--------------represents the range if it's not first or last in a list or the ending point of a range in a list.
+^										--------------Matches the empty string at the beginning of a line; also represents the characters not in the range of a list.
+$										--------------Matches the empty string at the end of a line.
+\b										--------------Matches the empty string at the edge of a word.
+\B										--------------Matches the empty string provided it's not at the edge of a word.
+\<										--------------Match the empty string at the beginning of word.
+\>										--------------Match the empty string at the end of word.
+
+----------------------------------------------------------103.8------------------------------------------------------
+Perform basic file editing operations using vi
+
+vi file.txt
+Moving the cursor:
+w 										--------------Next word on the current line
+b 										--------------Previous beginning of the word on the current line
+e 										--------------Next end of word on the current line
+Ctrl-f 									--------------Scroll forward one page
+Ctrl-b 									--------------Scroll backward one page
+
+Jumping:
+3G 										--------------With no number, will jump to the end & 10G will jump to line 10
+5L 										--------------3L will move the cursor to the 3rd line to the last line of the screen
+3H 										--------------5H will go to the 5th line from the top of the screen
+
+Editing text:
+i 										--------------Enter the insert mode
+a 										--------------Enter the insert mode after the current position of the cursor
+r 										--------------replace only one character
+o 										--------------open a new line below the cursor and go to the insert mode
+O 										--------------open a new line above the cursor and go to the insert mode
+c 										--------------clear to a location and go to the insert mode the replace till there and then normal insert ( cw will overwrite the current words)
+
+Delete:
+dw										--------------delete current word
+d$										--------------delete current location to end of the line
+d^										--------------delete current location to begining of the line
+dd 										--------------Delete the current line
+6dd										--------------delete 6 lines
+x 										--------------Delete character at the position of the cursor
+p 										--------------Paste the last deleted text after the cursor
+P 										--------------Paste the last deleted text before the cursor
+xp 										--------------swaps the character at the cursor position with the one on its right
+
+Replace :
+c--> (destination>) --> type raplace content --> escape
+example : c-->$ or ^ or b --> hiiiiiii --> escape
+
+Searching:
+/ 										--------------Search forward (
+? 										--------------Search backward
+n 										--------------repeat previous search. You can also use
+
+Exiting:
+:q! 									--------------Quit editing without saving = runaway after any mistake
+:w! 									--------------Write the file (whether modified or not). Attempt to overwrite existing files or read-only or other unwritable files
+:w myfile.txt 							--------------Write to a new name
+ZZ 										--------------Exit and save the file if modified
+:e! 									--------------Reload the file from disk
+:! 										--------------Run a shell command
+:!ls									--------------first run the ls and come back to the vi
+
+----------------------------------------------------------104.1------------------------------------------------------
+Create partitions and filesystems
+
+ls -l /dev/sd[a-z]						--------------list of disks
+fdisk -l /dev/sda						--------------list of partitions
+fdisk /dev/sda							--------------ورود به محیط fdisk
+
+fdisk switches:
+m										--------------help
+p										--------------list of partitions
+l										--------------type of partitions with ids
+d										--------------delete the partition
+n										--------------new partitions
+t										--------------change the partition type
+v										--------------verify
+w										--------------write
+q										--------------exit
+
+partition Format
+mkfs -t ext3 -L mohammad /dev/sda1
+
+Create swap:
+mkswap /dev/sda4 
+
+hwinfo --block --short					--------------hard info
+hwinfo									--------------all hardware details
+
+----------------------------------------------------------104.2------------------------------------------------------
+Maintain the integrity of filesystems
+
+fsck /dev/sdb
+blkid									--------------گرفتن اطلاعات هارد ها
+
+df:
+df -h									--------------اطلاعات پارتیشن ها بر اساس 1000بایت
+df -H									--------------اطلاعات پارتیشن ها بر اساس 1024بایت
+df -TH									--------------اطلاعات پارتیشن ها با نوع تایپ آن ها
+df -ih									--------------نمایش اطلاعات نود ها
+
+du:
+du										--------------current location
+du -h -c /run/media/mohammad			--------------میزان سایز یک آدرس را به مانمایش میدهد و در خط آخر حجم کل را نمایش میدهد
+du -hs									--------------دقیقا سایز همان دایرکتوری را میدهد
+
+debugfs /dev/sda2
+mke2fs -n /dev/sda7						--------------super block address
+
+----------------------------------------------------------104.3------------------------------------------------------
+Control mounting and unmounting of filesystems
+
+cat /etc/fstab							--------------تمامی پارتیشن های مانت شده را نمایش میدهد
+mount									--------------تمام پارتیشن های مانت شده را نمایش میدهد
+mount /dev/sda1 /media
+umount /media
+mount -o remount,ro /dev/sda1 /media	--------------ro(read only) , rw(read and write) , remount again
+mount -t ext4 /dev/sda1 /media			--------------فرمت فایل سیستم من این است و اگر نگذاریم خودش میفهمد
+
+
+swap:
+swapon
+swapoff
+swapon -s								--------------swap status
+
+برای اینکه یک پارتیشن را یک یوزر معمولی بتواند به صورت خودکار مانت کند خط زیر را در فایل زیر اضافه میکنیم
+vi /etc/fstab
+/dev/sdaX      none            swap      sw         0        0
+
+----------------------------------------------------------104.4------------------------------------------------------
+Manage disk quotas
+
+/dev/sda2 /home ext4 defaults,usrquota,grpquota			--------------نحوه مقدار دهی در فایل fstab
+quotacheck -u -a -m -c -v								--------------برای چک کردن فضای هر یوزر
+u-->user
+a-->all
+m-->mount
+quotaon /dev/sda1
+quotaoff /dev/sda1 
+quotaon -auv											--------------see the fstab file and check the usrquota
+edquota -u mohammad										--------------برای ادیت یک کاربر
+quota mohammad											--------------برای مشاهده مضعیت یک کاربر
+repquota -u -a											--------------برای گزارش گیری از وضعیت تمامی یوزرها
+
+----------------------------------------------------------104.5------------------------------------------------------
+Manage file permissions and ownership
+
+whoami
+groups													--------------گروه هایی که این کاربر در آن عضو هستند را نمایش میدهد
+id														--------------ای دی یوزر ها و گروه ها را نمایش میدهد
+cat /etc/group											--------------همه گروه ها اینجا هستند
+cat /etc/passwd											--------------همه یوزرها اینجا هستند
+ls -l /lpic/notes.txt									--------------نمایش وضعیت دسترسی های هر فایل
+chmod (u,g,o)+(r,w,x) test.txt							--------------تغییر دسترسی به هر فایل
+chmod 751 myfile										--------------همانند فایل بالا
+chmod u+s												--------------suid--هر کس این فایل را اجرا کند با دسترسی سازنده فایل خواهد بود
+chmod g+s												--------------guid--همانند بالا فقط برای گروه ها
+chmod o+s												--------------sticky bit
+
+umask													--------------چه دسترسی هایی نباید به یک فایل بدهیم
+
+chown root:root test.txt								-------------برای تغییر صاحب یک فایل
+
+ls -ltrh:
+drwxr-xr-x. 		3 				root          root          4.0K 	Jun 17 10:43 	java.txt
+permitions	number of sub files		user		group			size	date			file name
+
+----------------------------------------------------------104.6------------------------------------------------------
+Create and change hard & symbolic links
+
+
+ln myfile.txt hardlink.txt				-------------hard link
+ln -s myfile.txt softlink				-------------softlink
+ln -s mydir link2dir					-------------لینک کردن دایرکتوری ها
+find . -type l							-------------برای پدا کردن تمامی لینک ها در دایرکتوری فعلی
+
+----------------------------------------------------------104.7------------------------------------------------------
+Find system files and place files in the correct location
+
+which mkfd
+type for	
+whereis ping
+سه دستور بالا ادرس ها و محل هایی که این دستورات در آن ها قرار دارند را نمایش میدهد
+
+find /tmp/ -maxdepth 1 -user mohammad	-------------هر فایلی در تمپ که برای یوزر جادی هست را میدهد
+locate happy							-------------دستور خیلی بهتر است برای جستجو هر فایلی که در آن اسم آن هپی هست
+locate -S								-------------the location of offline database for locate
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-
+102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-
+102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-
+102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-
+102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-
+102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-102-
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+
+
+----------------------------------------------------------105.1------------------------------------------------------
+Customize and use the shell environment
+
+/etc/profile									-------------محل قرار گیری path
+/etc/profile.d/*								-------------فایل هایی که میخواهیم در شل و در همه یوزر ها اجرا شوند را در این دایرکتوری قرار دارد
+alias ll='ls -alF'
+
+funnyls () {
+ls -ltrh
+echo "This is a funny ls"
+}
+دستور بالا یک مقال تابع نویسی در شل می باشد
+
+set:
+set -b											-------------بصورت همزمان مقایع بک را نمایش میدهد
+set -e											-------------اگر خروجی دستور صفر بود یعنی دستورات بدون خطا انجام شده اند در غیر اینصورت خطا داریم
+set -n											-------------دستور را میخواند ولی اجرا نمیکند
+set -t											-------------بعد از اجرا دستورات خارج میشود
+sleep 5 & set -b
+
+export name=mohammad							-------------دسترسی به این متغیر در تمام پارسس های فرزندان این بش
+unset funnyls									-------------این دستور وظیفه دارد متغیر های محلی را از بین ببرد
+env name="mohammad"								-------------این دستور همه متغیر های محلی را نمایش میدهد و در آخر جاری را
+
+list=(salam donya man injam)					-------------تعریف یک لیست
+echo ${list[1]}									-------------یک همان دنیا است دو همان من و ...
+
+----------------------------------------------------------105.2------------------------------------------------------
+Customize or write simple scripts
+
+FILES=$(ls -1)									-------------هر چه بین دو پرانتز باشد آن را در آن متغیر میریزد
+
+مثال یک شرط در یک اسکریپت. بسیار به فاصله ها دفت گردد
+#!/bin/bash
+if [ condition ]
+then
+	do something
+	do another thing
+else
+	do new things
+	even funnier things
+fi
+
+if conditions :
+"a" = "b" 									-------------if two strings are equal (here it will return False)
+"a" != "b" 									-------------string a is not equal to string b
+4 -lt 40 									-------------if 4 is lower than 40 (True)
+5 -gt 15 									-------------if 5 is greater than 15 (False)
+5 -ge 5 									-------------if 5 is greater or equal 5
+5 -le 3 									-------------if 5 is lower or equal to 3
+9 -ne 2 									-------------9 is not equal with 2 (True)
+-f 											-------------FILENAME if file FILENAME exists
+-s 											-------------FILENAME if file exists and its size is more than 0
+-x 											-------------FILENAME file exists and is executable
+
+
+read:
+#/bin/sh
+echo "what is your name?"
+read NAME
+echo "Hello $NAME"							-------------رید یک مقداری از کامند لاین میخواند
+
+for loop:
+for FILE in $(ls);
+do
+	echo $FILE
+	wc $FILE
+done
+
+while loop:
+VAR=52
+while [ $VAR -gt 42 ]
+do
+	echo VAR is $VAR and it is still greater than 42
+	let VAR=VAR-1
+done
+
+mailing:
+mohammad@funlife:~$ mail root
+Cc:
+Subject: Hi there root
+hello there. This is my mail
+
+
+
+----------------------------------------------------------105.3------------------------------------------------------
+SQL data management
+
+mysql -u root -p							-------------ورود به دیتابیس
+SHOW DATABASES;								-------------حتما آخر دستورات;را بگذارید
+USE LPIC;									-------------انتخاب جدول
+SHOW TABLES;								-------------نمایش جداول
+SELECT * FROM phonebook;
+SELECT name FROM phonebook;
+SELECT * FROM info WHERE mood = 'happy';
+SELECT * FROM info WHERE mood = 'happy' AND weight >= 80;
+SELECT * FROM phonebook ORDER BY name;
+SELECT * FROM info GROUP BY mood;
+INSERT INTO phonebook (name, phone, email) VALUES ('ghasem', '+982112345678','');
+UPDATE phonebook SET email='haale@lpic.fake' WHERE name = 'haale';
+SELECT * FROM phonebook JOIN info;
+
+----------------------------------------------------------106.1------------------------------------------------------
+Install and configure X11
+
+this content of this chapter is very old and commands don't work in new versions of linux distrubutions :)
+
+/etc/X11/xorg.conf								-------------محل قرارگیری کانفیگ های محیطx
+xwininfo										-------------اطلاعات یک پنجره در محیط x
+xdpyinfo										-------------اطلاعات خود display
+xhost											-------------چه کسانی به ایکس این کامپیوتر دسترسی دارند
+xhost +											-------------ایکس برای همه باز شود
+xhost -											-------------ایکس برای همه بسته شود
+echo $DISPLAY									-------------شماره دیسپلی را نمایش میدهد
+export DISPLAY=192.168.42.85:0					-------------محیط گرافیکی من را در این ادرس نمایش بده
+
+----------------------------------------------------------106.2------------------------------------------------------
+Setup a display manager
+
+lightdm
+/etc/lightdm/
+----greeter-session=lightdm-webkit2-greeter			-------------این قسمت از فایل بالا نام تم انتخاب شده را نمایش میدهد
+
+----------------------------------------------------------106.3------------------------------------------------------
+Accessibility
+
+This chapter doesn't have any command
+
+----------------------------------------------------------107.1------------------------------------------------------
+Manage user and group accounts and related system files
+
+passwd												-------------تغییر پسورد
+passwd mohammad										-------------تغییر پسورد یک کاربر توسط یوزر روت
+
+useradd:
+useradd mohammad							
+useradd -d /.../... mohammad						-------------set home directory 
+useradd -m /.../... mohammad						-------------create home directory
+useradd -s /bin/bzr  mohammad						-------------یوزر در چه برنامه ای لاگین شود
+useradd -G wheel mohammad							-------------یوزر را عضو یک گروه میکنیم
+useradd -c 'mohammad khalatbari' mohammad			-------------یک نام کامل به کاربر میدهیم
+
+Modifying User:
+usermod -c 'mohammad azizi' mohammad
+usermod -s ...
+usermod -aG wheel mohammad							-------------یوزر را به یک گروه وارد میکنیم با این تفاوت که گروه های قبلی حذف نمی گردند
+useradd -L mohammad									-------------لاک کردن یک یوزر
+useradd -U mohammad									-------------خروج یک یوزر از حالت لاک
+
+Delete User:
+userdel mohammad									-------------حذف کاربر
+userdel -r mohammad									-------------حذف کاربر به همراه حذف home directory
+
+Managing Groups:
+groupadd managers
+groupdel managers
+groupadd -g 2222 managers							-------------تخصیص یک شماره به یک گروه
+groupmod -g 2222 managers							
+
+/etc/passwd											-------------نمایش اطلاعات کاربران
+/etc/shadow											-------------محل قرار گیری پسورد به همراه اطلاعات دیگر
+chage -l mohammad									-------------برای بهتر خواندن اطلاعاتshadowاز این دستور استفاده میکنیم
+chage mohammad										-------------تنظیم اطلاعاتی که در دستور بالا دیدیدم
+chage -E mohammad									-------------مشخص کردن تاریخ انقضا رمز عبور
+
+/etc/group											-------------نمایش اطلاعات مربوط به گروه ها
+id mohammad
+getent group wheel
+getent passwd mohammad
+سه دستور بالا اطلاعاتی در مورد هر کاربر به ما میدهد
+
+usermod -s /bin/nologin mohammad					-------------یوزر لاک نیست ولی لاگین هم نمیتواند بکند
+
+----------------------------------------------------------107.2------------------------------------------------------
+Automate system administration tasks by scheduling jobs
+
+crontab -l											-------------لیست کارهایی که برای این کاربر ست شده است را نمایش میدهد
+crontab -e											-------------برای اضافه کردن یک کار موارد زیر را به انتهای این فایل اضافه میکنیم
+m	h	dom	mon	dow	command							-------------کامند	روزهفته	ماه	روز	ساعت	دقیقه
+5 1 * * * $HOME/bin/daily.job >> $HOME/tmp/out 2>&1
+دقیقه پنجم ساعت یک هر روز از هر ماه و هر روز هفته  
+
+
+AT:
+at now +2 min
+>echo "hi"											-------------از الان تا دو دقیقه بعد این دستورات را انجام بده
+at tommorow
+at 08:00
+atq													-------------کارهایی را که در حال انجام است را نمایش میدهد
+atrm												-------------پاک کردن یک کار
+
+System Wide cron:
+-*/15 * * * * root test -x /usr/lib/cron/run-crons && /usr/lib/cron/run-crons >/dev/null 2>&1
+
+/etc/cron.allow
+/etc/cron.deny
+/etc/at.allow
+/etc/at.deny
+چهار فایل بالا برای دسترسی به یوزر ها هستند  و فقط کافیست نام یوزر را در آن ها بنویسیم
+
+----------------------------------------------------------107.3------------------------------------------------------
+Localisation and internationalisation
+
+date +'%Y%m%d-%H%M'									-------------نمایش تاریخ به فرمت دلخواه ما
+tzselect											-------------تنظیم timezone
+TZ='Asia/Tehran'; export TZ							-------------تنظیم timezone
+locale												-------------برخی متغیر های محلی که مربوط به زبان سیستم هست را نمایش میدهد
+export LC_ALL=fa_IR.UTF-8							-------------برای تغییر استاندارد زبان سیستم
+export LC_ALL=C										-------------در این حالت source older براساس binary  میباشد
+iconv -f WINDOWS-1258 -t UTF-8 /tmp/myfile.txt      -------------تغییر فرمت سمت چپ به فرمت سمت راست
+
+----------------------------------------------------------108.1------------------------------------------------------
+Maintain system time
+
+cat /etc/adjtime
+date												-------------ساعت و تاریخ سیستم
+hwclock												-------------ساعت سخت افزار
+hwclock --localtime --set --date="01/05/2015 22:04:00" 	------------- ساعت سخت افزار بر اساس ساعت لوکال
+hwclock -u -w										-------------ساعت سخت افزار بر اساس universal
+ntpdate pool.ntp.org								-------------از سرور ntpساعت را میپرسد
+hwclock	-w											-------------همان مقدار دستور بالا را روی ساعت سخت افزاری مینویسد
+
+apt install ntp	
+systemctl start ntp
+systemctl enable ntp								-------------هر سه دستور بالا برای نصب و راه اندازی سرویس ntp می باشد
+systenctl status ntp
+ntpdate pool.ntp.org
+ntpq -p												-------------یک کويری به سرور ان تی پی میزند و بعد مقدار انتخاب شده توسط سیستم ما را نیز نمایش میدهد
+
+----------------------------------------------------------108.2------------------------------------------------------
+System logging
+
+less /etc/syslog.conf								-------------در این فایل برخی خط ها وجود دارد که مشخص میکند هر نوع خطا را باید چه اکشنی انجام دهد
+	user.*		-/var/log/user.log					-------------یکی از خط های همان فایل است که میگوید هر کاری که کاربر انجام دارد را در ان فایل ثبت کن
+
+vi /etc/default/rsyslog
+	RSYSLOG_PRODILE="-r"							-------------creating rsyslog listener
+systemctl restart rsyslog
+
+journalctl											-------------مشاهده تمام لاگ های ثبت شده توسط systemd
+
+logger local1.info mohammad was here				-------------ثبت یک لاگ در سیستم
+tail /var/log/syslog								-------------مشاهده لاگ بالا
+
+logrotate:
+cd /etc/logrotate.d
+cat /etc/logrotate.conf
+	weekly											-------------هفته ای یکبار فایل جدید برای لاگ درست کرده و فایل قدیمی را به تاریخ آن روز تغییر بده
+	rotate 52										-------------فقط ۵۲فایل اخر را نگه دار و فایل قدیمی تر را پاک کن
+	missingok										-------------اگر لاگ نداشت مشکلی نیست
+	compress										-------------فشرده سازی هم انجام بده
+	create 0640 www-dataadm							-------------فایل هایی با این دسترسی بساز
+	...
+
+----------------------------------------------------------108.3------------------------------------------------------
+Mail Transfer Agent (MTA) basics
+
+cat /etc/aliases									-------------این فایل حاوی دریافت گیرندگان ایمیل هاست به صورت زیر
+	root: mohammad									-------------هر ایمیلی برای روت آمد را بفرست برای محمد
+newaliases											-------------اگر یک مقدار جدید رد فایل بالا نوشتیم این دستور را میزنیم تا اجرا گردد
+mail mohammad										-------------ارسال یک ایمیل به محمد
+mail												-------------نمایش ایمیل های هر کاربر
+
+local forward:
+vi .forward											-------------ساخت یک لوکال فروارد که این برای کاربران معمولی می باشد
+	mohammad@gamil.com								-------------همه ایمیل هایی که این کاربر دریافت میکند را به این ادرس فروارد می کند
+mailq												-------------صف ایمیل ها را نمایش میدهد
+
+----------------------------------------------------------108.4------------------------------------------------------
+Manage printers and printing
+
+cups												-------------common unix printing service
+localhost:631										-------------ادرس وب cops
+/etc/cups/cups.conf									-------------فایل کانفیگ cups
+/etc/cups/printers.conf								-------------تنظیمات پرینتر های نصب شده اینجا قرار دارد
+lpr test.txt 										-------------print a file on default printer
+lpr -Pmy_printer test.txt							-------------print a file on the selected printer
+lpq test.txt 										-------------show print queue/jobs for default printer
+lpq -a 												-------------show print queue/jobs for all printers
+lprm <job id> 										-------------rm/remove a file from priner queue
+lprm -Pmy_printer									-------------rm/remove all files from priner queue
+lpc test.txt 										-------------printer control / troubleshooting program and check the printers status 
+ 
+cupsaccept my_printer 								-------------tells the printer queue to accept new jobs
+cupsreject my_printer 								-------------tells the printer to reject any new job
+دستور بالا برای قبول صف می باشد و در صورتی که صف غیر فعال باشد کاربر خطا دریافت می کند
+cupsenable my_printer 								-------------enables the actual/physical printing of the jobs
+cupsdisable my_printer 								-------------disables the physical printing of the jobs
+دو دستور بالا دستور پرینت دریافت میشود ولی پرینت گرفته نمیشود و کاربر پیغام خطا نمیگیرد
+
+----------------------------------------------------------109.1------------------------------------------------------
+Fundamentals of internet protocols
+
+This chapter speake about basic information of network
+some omportant ports in network:
+20, 21 FTP (one data, one control)
+22 SSH
+23 Telnet
+25 SMTP
+53 DNS
+80 HTTP
+110 POP3
+123 NTP
+139 NetBIOS
+143 IMAP
+161, 162 SNMP
+389 LDAP
+443 HTTPS
+465 SMTPS
+636 LDAPS
+993 IMAPS
+995 POP3S
+
+----------------------------------------------------------109.2------------------------------------------------------
+Basic network configuration
+
+ifconfig											-------------لیست کارت شبکه های فعال
+ifcinfig -a											-------------لیست تمامی کارت شبکه ها (فعال و عیر فعال)ظ
+ifconfig eth0 192.168.42.42 netmask 255.255.255.0	-------------تنظیم یک ای پی ادرس روی یک کارت شبکه
+ifconfig enp0s25 down								-------------غیر فعال کردن کارت شبکه
+ifconfig enp0s25 up									-------------فعال کردن کارت شبکه
+cat /etc/sysconfig/network-scripts/ifcfg-eth0		-------------نمایش اطلاعات مربوط به کارت شبکه و امکان تغییر تنظیمات آن ها
+cat /etc/resolv.conf								-------------میتوانیم دی ان اس را هم در اینجا و هم در فایل بالا تنظیم کنیم
+cat /etc/hostname									-------------hostname
+cat /etc/hosts										-------------همانند یک دی ان اس لوکال می باشد . همه هاست های سیستم مارا نشان میدهد
+route												-------------show table route
+netstat -nr											-------------همانند دستور بالا
+route add default gw 192.168.1.1					-------------یک روت اضافه کردیم
+ip addr show										-------------همانند دستور ifconfig
+cat /etc/nsswitch.conf								-------------ترتیب اولویت خواندن فایل ها را نمایش میدهد
+hosts: dns files									-------------برای مثال اینجا هاست ها اول دی ان اس را چک میکند و بعد فایل هارا
+
+----------------------------------------------------------109.3------------------------------------------------------
+Basic network troubleshooting
+
+This chapter about network troubleshooting and it doesn't have any new command
+
+----------------------------------------------------------109.4------------------------------------------------------
+Configure client side DNS
+
+This chapter about network troubleshooting and it doesn't have any new command
+
+----------------------------------------------------------110.1------------------------------------------------------
+Perform security administration tasks
+
+find / -perm -u+s										-------------این دستوراتی که برای آن هاsuidثبت شد
+netstat -na | grep listen								------------- پورت هایی در سیستم ما که در حال گوش دادن هستند
+netstat -tuna											-------------همانند دستور بالا بدون ذکر نام برنامه
+netstat -p												-------------همانند دستور بالا با ذکر نام برنامه
+lsof													-------------این دستور لیست تمام کانکشن های سیستم را میدهد
+lsof -i													-------------لیست تمام کانکشن های ارتباطی را میدهد
+fuser 80/tcp											-------------میگوید که روی این پورت چه پروسه هایی دارند کار میکنند
+nmap localhost											-------------این دستور دارای سوئیچ های زیادی می باشد که اطلاعات در مورد سیستم را میدهد ولی این دستور اطلاعات سیستم خودمان را میدهد
+nmap microsoft.com
+su														-------------نام هر یوزری که جلو آن بنویسیم پسورد آن یوزر را گرفته و به همان یوزر تبدیل می گردد
+su - mohammad 
+su -													-------------حالت پیش فرض است که وارد یوزر روت می شود
+sudo cat /etc/sudoers									-------------تمام دسترسی ها اینجا مشخص گردیده است که این فایل را نباید اصلا تغییر دهیم
+visudo													-------------برای تغییر در دسترسی های فایل بالا از این دستور استفاده میکنیم
+ulimit -a												-------------وصعیت دسترسی هر یوزر به برخی موارد سیستمی را نمایش میدهد
+ulimit -t 1												-------------برای تغییر میتوانیم همانند این دستور را بزنیم
+time cp ...												-------------این دستور زمان انجام هر دستور را نمایش میدهد
+
+checking the users in the system:
+w														-------------چه کسانی در سیستم هستند و چیکار میکنند
+who														-------------همان دستور بالا با اطلاعات کمتر
+last													-------------چه کسانی آخرین بار وارد سیستم شده اند
+last -f /var/log/btmp									-------------لاگین هایی که یوزر های سعی کردند انجام دهند ولی به خطا خوردند
+
+----------------------------------------------------------110.2------------------------------------------------------
+Setup host security
+
+cat /etc/hosts.allow
+ftp: 10.10.10. localhost								-------------یعنی این سرویس میتواند از این دو آدرس استفاده کند
+
+vi /etc/nologin											-------------این فایل را می سازیم و هر یوزر که لاگین کرد محتوا این فایل را می بیند
+
+chkconfig httpd off
+sysv-rc-conf httpd off									-------------خاموش کردن سرویس ها در سیستم sysV
+
+update-rc.d httpd remove								-------------خاموش کردن سرویس در updtart
+systemctl disable httpd									-------------اموش کردن سرویس در systemd
+
+----------------------------------------------------------110.3------------------------------------------------------
+Securing data with encryption
+
+ssh-keygen												-------------create public and private keys
+ssh-copy-id 10.0.2.15									-------------کلید پابلیک را روی مقصد میریزد
+ssh -agent												-------------وظیفه مدیریت کلید ها را بر عهده دارد
+ssh-add -l												-------------لیست کلید ها را نمایش میدهد
+ssh-add -D												-------------پاک کردن کلید ها
+ssh-add													-------------از روی فایل های ساخته شده دوباره کلید ها را می سازد
+/etc/ssh
+
+gpg --gen-key											-------------کلید را رد سیستم خودمان میسازد
+cd.gnupg												-------------محل قرار گیری کلید ها
+gpg --export name > gpg.pub								-------------کلید را برای کسی ارسال میکتیم
+gpg --import gpg.pub									-------------وارد کردن یک کلید به سیستم خودمان
+
+gpg --out file.txt.encrypted --recipient a@gmail.com --encrypt file.txt
+دستور بالا برای رمز نگاری یک فایل ساخته شده بر اساس یکی از کلید های ساخته شده می باشد
+
+gpg --out out.txt --decrypt file.txt.encrypted
+دستور بالا برای باز کردن فایل رمزنگاری شده در مقصد می باشد
+
+gpg --output revoke.asc --gen-revoke a@gmail.com		-------------این دستور برای ساخت revoke
+gpg --clearsign originalfile							-------------امضا فایل ما را میسازد و در یک فایل با پسوند asc میریزد
+gpg --verify recievedfile								-------------برای چک کردن امضا می باشد
+
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+END-END-END-END-END-END-END-END-END-END-END-END-END-END-END-END-END-END-END-END-END-END-END-END-END-END-END-END-END-
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
